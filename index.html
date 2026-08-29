@@ -91,13 +91,16 @@
     }
     .hero-grid { display: block; padding: 96px 40px 104px; position: relative; }
     .hero-content { max-width: 640px; }
-    .hero-headline { position: relative; isolation: isolate; margin: -20px -24px 0; padding: 20px 24px; border-radius: 20px; overflow: hidden; }
+    .hero-headline { position: relative; isolation: isolate; margin: 20px 0 32px; padding: 40px 44px; border-radius: 24px; overflow: hidden; }
     .hero-headline::before {
-      content: ""; position: absolute; inset: -14px; z-index: -2;
+      content: ""; position: absolute; inset: -8px; z-index: -2;
       background-image: url("hero-main.png"); background-size: cover; background-position: center 42%;
-      filter: blur(9px) saturate(0.95); transform: scale(1.08);
+      filter: blur(2px) saturate(1.05); transform: scale(1.02);
     }
-    .hero-headline::after { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(251, 252, 253, 0.74); }
+    .hero-headline::after {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background: linear-gradient(100deg, rgba(251,252,253,0.94) 0%, rgba(251,252,253,0.8) 34%, rgba(251,252,253,0.3) 74%, rgba(251,252,253,0.08) 100%);
+    }
     .hero::before {
       content: "";
       position: absolute; inset: 0; pointer-events: none;
@@ -324,11 +327,11 @@
 
   <section class="hero">
     <div class="wrap hero-grid">
+      <div class="badge"><i></i><span>24시간 접수 · 평균 42분 내 도착</span></div>
+      <div class="hero-headline">
+        <h1 style="animation:riseIn .75s cubic-bezier(.22,1,.36,1) both;animation-delay:.06s">물이 안 내려가면,<br>원인부터 찾습니다</h1>
+      </div>
       <div class="hero-content">
-        <div class="badge"><i></i><span>24시간 접수 · 평균 42분 내 도착</span></div>
-        <div class="hero-headline">
-          <h1 style="animation:riseIn .75s cubic-bezier(.22,1,.36,1) both;animation-delay:.06s">물이 안 내려가면,<br>원인부터 찾습니다</h1>
-        </div>
         <p class="sub" style="animation:riseIn .75s cubic-bezier(.22,1,.36,1) both;animation-delay:.12s">막힌 곳만 뚫고 돌아가지 않습니다. 배관 내부를 확인해 원인을 잡고, 다시 막히지 않게 정리해 드립니다.</p>
         <div class="cta-row" style="animation:riseIn .75s cubic-bezier(.22,1,.36,1) both;animation-delay:.18s">
           <a class="btn-primary" href="tel:01080361609">지금 전화 상담</a>
