@@ -1,0 +1,7 @@
+.vercel
+node_modules
+.DS_Store
+Thumbs.db
+
+# Design-tool export artifact, not part of the deployed site
+하수구업체 랜딩페이지.html
