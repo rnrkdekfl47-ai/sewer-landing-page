@@ -230,11 +230,26 @@
     .two { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
     .area-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid #EDF0F5; }
     .area-list { border-top: 1px solid var(--line); margin-top: 26px; }
-    .reviews { display: grid; gap: 14px; }
-    .review { border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px; background: #fff; display: grid; gap: 12px; transition: border-color .3s ease, box-shadow .3s ease; }
+    .reviews-track {
+      display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding-bottom: 4px; scrollbar-width: none;
+    }
+    .reviews-track::-webkit-scrollbar { display: none; }
+    .review {
+      scroll-snap-align: start; flex: 0 0 86%;
+      border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px; background: #fff;
+      display: grid; gap: 12px; transition: border-color .3s ease, box-shadow .3s ease;
+    }
     .review:hover { border-color: rgba(26, 95, 214, 0.35); box-shadow: 0 14px 32px -22px rgba(26, 95, 214, 0.4); }
     .review p { font-size: 16.5px; line-height: 1.75; color: #344054; }
     .review .who { font-size: 14px; color: #98A2B3; }
+    .reviews-nav { display: flex; gap: 8px; margin-top: 14px; }
+    .rv-btn {
+      width: 38px; height: 38px; border-radius: 50%; border: 1px solid #DCE2EB; background: #fff;
+      color: var(--ink); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s ease, color .2s ease;
+    }
+    .rv-btn:hover { border-color: var(--blue); color: var(--blue); }
 
     .faq { margin-top: 40px; border-top: 1px solid var(--line); }
     .faq-item { border-bottom: 1px solid var(--line); }
@@ -407,7 +422,7 @@
           <div class="chips" id="places"></div>
         </div>
         <div class="notes">
-          <div>· 야간(22시~06시) 및 공휴일 출동 시 3만 원이 추가됩니다.</div>
+          <div>· 하수관 및 배수관이 막혔을 경우 현장 상황에 따라 금액이 달라질 수 있습니다.</div>
           <div>· 배관 파손이 확인되면 교체 견적을 별도로 안내드리고, 동의 후에만 진행합니다.</div>
         </div>
       </div>
@@ -435,9 +450,13 @@
         <p class="lead" style="margin-bottom:0">지역별로 상주 기사가 배정되어 있어, 접수 후 평균 42분 안에 도착합니다.</p>
         <div class="area-list" id="areas"></div>
       </div>
-      <div class="reviews" data-reveal>
+      <div data-reveal>
         <div class="eyebrow">Reviews</div>
-        <div id="reviews"></div>
+        <div class="reviews-track" id="reviews"></div>
+        <div class="reviews-nav">
+          <button type="button" class="rv-btn" id="rvPrev" aria-label="이전 후기">‹</button>
+          <button type="button" class="rv-btn" id="rvNext" aria-label="다음 후기">›</button>
+        </div>
       </div>
     </div>
   </section>
@@ -461,6 +480,7 @@
       <form id="form">
         <input type="text" name="name" placeholder="성함" required>
         <input type="tel" name="phone" placeholder="연락처" required>
+        <textarea name="issue" rows="3" placeholder="어떤 문제인가요?"></textarea>
         <button class="submit-btn" type="submit" id="submitBtn">견적 요청 보내기</button>
         <div class="legal">접수 내용은 상담 목적으로만 사용하며, 처리 후 삭제됩니다.</div>
       </form>
@@ -496,8 +516,8 @@
 
   <script>
     const jobs = [
-      { label: "변기 막힘", min: 7, max: 15, dur: "30분~1시간" },
-      { label: "싱크대 막힘", min: 6, max: 12, dur: "30분~1시간" },
+      { label: "변기 막힘", min: 6, max: 12, dur: "30분~1시간" },
+      { label: "싱크대 막힘", min: 7, max: 15, dur: "30분~1시간" },
       { label: "욕실 배수구", min: 8, max: 16, dur: "1시간 내외" },
       { label: "하수구 역류", min: 15, max: 35, dur: "1~3시간" },
       { label: "누수 탐지", min: 20, max: 45, dur: "1~2시간" }
@@ -511,11 +531,11 @@
     const caseDefs = [
       { title: "식당 주방 배수관 고압세척", desc: "기름때로 관 지름이 절반까지 좁아진 현장", before: "시공 전 · 기름때가 굳은 배수관 내부", after: "시공 후 · 관 안쪽까지 세척된 배수관" },
       { title: "아파트 욕실 역류 해결", desc: "머리카락과 이물질이 뭉쳐 물이 차오르던 상태", before: "시공 전 · 물이 고인 욕실 배수구", after: "시공 후 · 물이 바로 빠지는 배수구" },
-      { title: "다가구 주택 옥외 하수관", desc: "변기 역류 및 오수관", before: "시공 전 · 물티슈 및 이물질로 인해 막힌 배관", after: "시공 후 · CCTV로 확인한 배관 내부" }
+      { title: "다가구 주택 옥외 하수관", desc: "변기 및 오수관 물티슈 및 이물질 막힘 고압세척", before: "시공 전 · 물티슈 및 이물질로 인해 막힌 배관", after: "시공 후 · CCTV로 확인한 배관 내부" }
     ];
     const faqDefs = [
       { q: "밤이나 주말에도 와 주시나요?", a: "연중무휴 24시간 접수를 받고 어디든 출동합니다." },
-      { q: "비용은 언제 확정되나요?", a: "현장에서 상태를 확인한 뒤, 작업을 시작하기 전에 최종 금액을 말씀드립니다. 동의하신 금액에서 올라가는 일은 없습니다. 확인만 하고 작업하지 않으실 경우 출동비만 받습니다." },
+      { q: "비용은 언제 확정되나요?", a: "현장에서 상태를 확인한 뒤, 작업을 시작하기 전에 최종 금액을 말씀드립니다. 확인만 하고 작업하지 않으실 경우 출동비만 받습니다." },
       { q: "작업 후에 또 막히면 어떻게 되나요?", a: "시공 후 3개월 안에 같은 지점이 다시 막히면 무상으로 재점검해 드립니다. 배관 파손이나 구조적 원인이 확인된 경우에는 별도로 교체 견적을 안내드립니다." },
       { q: "바닥이나 벽이 더러워지지 않나요?", a: "작업 전에 보호 매트를 깔고 진행하며, 마무리 후 사용하던 공간을 원래 상태로 정리해 드립니다. 오염이 심한 작업은 세척까지 포함합니다." },
       { q: "관 안쪽을 실제로 확인할 수 있나요?", a: "최신형 프리미엄 내시경을 통해 내부를 촬영해 고객님과 소통 후 설명을 드리며, 촬영한 영상과 사진은 전과 후로 나누어 전달해 드리고 있습니다." },
@@ -557,8 +577,17 @@
     document.getElementById("reviews").innerHTML = [
       ["식당 주방이 막혀 영업을 못 할 상황이었는데, 한 시간 안에 오셔서 관까지 세척해 주셨습니다. 두 달 지났는데 아직 멀쩡합니다.", "김○○ 고객님 · 강서구 · 음식점 운영"],
       ["전화로 말씀하신 금액이 그대로였습니다. 카메라로 안쪽 보여주면서 설명해 주셔서 믿음이 갔어요.", "이○○ 고객님 · 송파구 · 아파트 거주"],
-      ["밤 열한 시에 역류가 났는데 바로 와 주셨어요. 정리까지 깔끔하게 해 주고 가셨습니다.", "박○○ 고객님 · 부천 · 다가구 임대인"]
+      ["밤 열한 시에 역류가 났는데 바로 와 주셨어요. 정리까지 깔끔하게 해 주고 가셨습니다.", "박○○ 고객님 · 부천 · 다가구 임대인"],
+      ["누수 위치를 못 찾아 며칠을 고생했는데, 장비로 바로 짚어주셔서 벽을 뜯지 않고 해결했습니다.", "최○○ 고객님 · 마포구 · 상가 운영"],
+      ["변기가 반복적으로 역류해서 여러 업체를 불러봤는데, 여기는 원인부터 확인하고 나서야 재발이 없어졌습니다.", "정○○ 고객님 · 노원구 · 아파트 거주"],
+      ["새벽 시간이었는데도 친절하게 응대해주시고 출동도 빨랐어요. 가격도 사전에 말씀하신 그대로였습니다.", "윤○○ 고객님 · 인천 · 단독주택 거주"],
+      ["욕실 배수구가 계속 역류해서 골치였는데, 고압세척 한 번으로 완전히 해결됐습니다.", "한○○ 고객님 · 수원 · 아파트 거주"],
+      ["상가 하수관이 막혀 영업에 지장이 있었는데, 빠르게 오셔서 원인까지 설명해주셔서 믿음이 갔습니다.", "임○○ 고객님 · 강남구 · 상가 운영"],
+      ["물티슈 때문에 배관이 막혔었는데, 다시 막히지 않도록 꼼꼼하게 처리해주셨어요.", "강○○ 고객님 · 부천 · 다가구 임대인"]
     ].map(([t,w]) => `<div class="review"><p>${t}</p><div class="who">${w}</div></div>`).join("");
+    const reviewsTrack = document.getElementById("reviews");
+    document.getElementById("rvPrev").addEventListener("click", () => reviewsTrack.scrollBy({ left: -reviewsTrack.clientWidth * 0.9, behavior: "smooth" }));
+    document.getElementById("rvNext").addEventListener("click", () => reviewsTrack.scrollBy({ left: reviewsTrack.clientWidth * 0.9, behavior: "smooth" }));
 
     document.getElementById("faqs").innerHTML = faqDefs.map((f,i) =>
       `<div class="faq-item${i===0?" open":""}"><button type="button" data-faq="${i}"><span>${f.q}</span><span class="plus">+</span></button><div class="faq-a"><p>${f.a}</p></div></div>`
@@ -632,7 +661,14 @@
     document.getElementById("form").addEventListener("submit", (e) => {
       e.preventDefault();
       const btn = document.getElementById("submitBtn");
-      btn.textContent = "접수되었습니다";
+      const data = new FormData(e.target);
+      const name = (data.get("name") || "").toString();
+      const phone = (data.get("phone") || "").toString();
+      const issue = (data.get("issue") || "").toString();
+      let body = `[견적 요청] 성함: ${name} / 연락처: ${phone}`;
+      if (issue) body += ` / 문의내용: ${issue}`;
+      btn.textContent = "문자 앱으로 연결 중...";
+      window.location.href = `sms:01080361609?body=${encodeURIComponent(body)}`;
       setTimeout(() => { btn.textContent = "견적 요청 보내기"; }, 2600);
     });
 
