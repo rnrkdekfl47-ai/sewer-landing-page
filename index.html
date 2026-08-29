@@ -95,8 +95,9 @@
     }
     .hero-grid::before {
       content: ""; position: absolute; inset: -8px; z-index: -2;
-      background-image: url("hero-main.png"); background-size: cover; background-position: 70% 26%;
-      filter: blur(0.5px) saturate(1.1) brightness(1.2); transform: scale(1.5);
+      background-image: url("hero-main.png"); background-repeat: no-repeat;
+      background-size: 145% auto; background-position: 4% 10%;
+      filter: saturate(1.15) contrast(1.1) brightness(1.12);
     }
     .hero-card {
       position: relative; max-width: 660px;
