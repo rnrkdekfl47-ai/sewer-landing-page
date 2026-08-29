@@ -1,0 +1,37 @@
+[하수구천국24시 랜딩페이지 - 작업 이어하기 안내]
+
+■ 지금까지 한 일
+- 랜딩페이지(index.html) 디자인/문구 전부 수정 완료
+- GitHub 저장소에 푸시 완료: https://github.com/rnrkdekfl47-ai/sewer-landing-page
+- 아직 안 한 일: Vercel 배포 (Vercel 로그인이 필요함)
+
+■ 다른 PC(PC방 등)에서 이어서 하는 방법
+
+1. Claude Code 실행 후 로그인
+   - 지금 쓰는 계정(rnrkdekfl47@gmail.com)으로 로그인
+
+2. Claude Code에게 이렇게 말하기
+   "https://github.com/rnrkdekfl47-ai/sewer-landing-page 이 저장소 받아서 이어서 작업할게.
+    필요한 프로그램(Git, GitHub CLI) 설치해줘."
+
+   -> 필요하면 Claude가 알아서 Git/GitHub CLI를 설치해주고,
+      GitHub 로그인이 필요하면 코드와 링크를 알려줌 (그 코드를 브라우저에 입력하면 됨)
+
+3. 저장소 받기 (Claude가 대신 실행해줌, 명령어는 참고용)
+   gh repo clone rnrkdekfl47-ai/sewer-landing-page
+
+4. 원하는 수정 내용 말하기
+   예) "메인 사진 위치 조금만 더 오른쪽으로 옮겨줘" 등
+
+5. 작업 끝나면 꼭 이렇게 말하기
+   "GitHub에 푸시해줘"
+   -> 이걸 안 하면 그 PC에서만 저장되고 다음 장소에 반영이 안 됨
+
+■ 최종적으로 배포할 때 (다 완성됐을 때)
+   "이제 Vercel에 배포해줘"
+   -> Vercel 로그인 코드가 나오면 안내된 링크에서 로그인/승인하면 됨
+      (Vercel 계정 없으면 GitHub 계정으로 바로 가입 가능)
+
+■ 참고
+   - 로컬 파일 원본 위치(이 PC): C:\Users\CafeAlle\Desktop\하수구 랜딩
+   - GitHub 저장소: https://github.com/rnrkdekfl47-ai/sewer-landing-page
