@@ -231,18 +231,19 @@
     .area-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid #EDF0F5; }
     .area-list { border-top: 1px solid var(--line); margin-top: 26px; }
     .reviews-track {
-      display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
-      padding-bottom: 4px; scrollbar-width: none;
+      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding-bottom: 4px; scrollbar-width: none; max-width: 100%;
     }
     .reviews-track::-webkit-scrollbar { display: none; }
     .review {
-      scroll-snap-align: start; flex: 0 0 86%;
-      border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px; background: #fff;
-      display: grid; gap: 12px; transition: border-color .3s ease, box-shadow .3s ease;
+      scroll-snap-align: start; flex: 0 0 148px; width: 148px; aspect-ratio: 1 / 1;
+      border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+      text-align: center; transition: border-color .3s ease, box-shadow .3s ease;
     }
     .review:hover { border-color: rgba(26, 95, 214, 0.35); box-shadow: 0 14px 32px -22px rgba(26, 95, 214, 0.4); }
-    .review p { font-size: 16.5px; line-height: 1.75; color: #344054; }
-    .review .who { font-size: 14px; color: #98A2B3; }
+    .review p { font-size: 14px; line-height: 1.5; color: #344054; margin: 0; }
+    .review .who { font-size: 12px; color: #98A2B3; }
     .reviews-nav { display: flex; gap: 8px; margin-top: 14px; }
     .rv-btn {
       width: 38px; height: 38px; border-radius: 50%; border: 1px solid #DCE2EB; background: #fff;
@@ -575,19 +576,31 @@
     ].map(([n,t]) => `<div class="area-row"><span style="font-size:16.5px;font-weight:500">${n}</span><span class="mono" style="font-size:14px;color:#1A5FD6">${t}</span></div>`).join("");
 
     document.getElementById("reviews").innerHTML = [
-      ["식당 주방이 막혀 영업을 못 할 상황이었는데, 한 시간 안에 오셔서 관까지 세척해 주셨습니다. 두 달 지났는데 아직 멀쩡합니다.", "김○○ 고객님 · 강서구 · 음식점 운영"],
-      ["전화로 말씀하신 금액이 그대로였습니다. 카메라로 안쪽 보여주면서 설명해 주셔서 믿음이 갔어요.", "이○○ 고객님 · 송파구 · 아파트 거주"],
-      ["밤 열한 시에 역류가 났는데 바로 와 주셨어요. 정리까지 깔끔하게 해 주고 가셨습니다.", "박○○ 고객님 · 부천 · 다가구 임대인"],
-      ["누수 위치를 못 찾아 며칠을 고생했는데, 장비로 바로 짚어주셔서 벽을 뜯지 않고 해결했습니다.", "최○○ 고객님 · 마포구 · 상가 운영"],
-      ["변기가 반복적으로 역류해서 여러 업체를 불러봤는데, 여기는 원인부터 확인하고 나서야 재발이 없어졌습니다.", "정○○ 고객님 · 노원구 · 아파트 거주"],
-      ["새벽 시간이었는데도 친절하게 응대해주시고 출동도 빨랐어요. 가격도 사전에 말씀하신 그대로였습니다.", "윤○○ 고객님 · 인천 · 단독주택 거주"],
-      ["욕실 배수구가 계속 역류해서 골치였는데, 고압세척 한 번으로 완전히 해결됐습니다.", "한○○ 고객님 · 수원 · 아파트 거주"],
-      ["상가 하수관이 막혀 영업에 지장이 있었는데, 빠르게 오셔서 원인까지 설명해주셔서 믿음이 갔습니다.", "임○○ 고객님 · 강남구 · 상가 운영"],
-      ["물티슈 때문에 배관이 막혔었는데, 다시 막히지 않도록 꼼꼼하게 처리해주셨어요.", "강○○ 고객님 · 부천 · 다가구 임대인"]
+      ["관까지 완벽하게 뚫어주셨어요", "김○○ 고객님"],
+      ["말씀하신 금액 그대로였어요", "이○○ 고객님"],
+      ["새벽에도 바로 와주셨어요", "박○○ 고객님"],
+      ["벽 안 뜯고 누수 해결했어요", "최○○ 고객님"],
+      ["재발 없이 깔끔했습니다", "정○○ 고객님"],
+      ["친절하고 출동이 빨랐어요", "윤○○ 고객님"],
+      ["고압세척 한 번에 끝났어요", "한○○ 고객님"],
+      ["설명이 확실해서 믿음 갔어요", "임○○ 고객님"],
+      ["다시 안 막히게 해주셨어요", "강○○ 고객님"]
     ].map(([t,w]) => `<div class="review"><p>${t}</p><div class="who">${w}</div></div>`).join("");
     const reviewsTrack = document.getElementById("reviews");
-    document.getElementById("rvPrev").addEventListener("click", () => reviewsTrack.scrollBy({ left: -reviewsTrack.clientWidth * 0.9, behavior: "smooth" }));
-    document.getElementById("rvNext").addEventListener("click", () => reviewsTrack.scrollBy({ left: reviewsTrack.clientWidth * 0.9, behavior: "smooth" }));
+    function rvStep(dir) {
+      const cardWidth = reviewsTrack.firstElementChild.getBoundingClientRect().width + 12;
+      const atEnd = reviewsTrack.scrollLeft + reviewsTrack.clientWidth >= reviewsTrack.scrollWidth - 4;
+      if (dir > 0 && atEnd) {
+        reviewsTrack.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        reviewsTrack.scrollBy({ left: dir * cardWidth, behavior: "smooth" });
+      }
+    }
+    let rvTimer = setInterval(() => rvStep(1), 2000);
+    function rvRestart() { clearInterval(rvTimer); rvTimer = setInterval(() => rvStep(1), 2000); }
+    document.getElementById("rvPrev").addEventListener("click", () => { rvStep(-1); rvRestart(); });
+    document.getElementById("rvNext").addEventListener("click", () => { rvStep(1); rvRestart(); });
+    reviewsTrack.addEventListener("pointerdown", () => clearInterval(rvTimer));
 
     document.getElementById("faqs").innerHTML = faqDefs.map((f,i) =>
       `<div class="faq-item${i===0?" open":""}"><button type="button" data-faq="${i}"><span>${f.q}</span><span class="plus">+</span></button><div class="faq-a"><p>${f.a}</p></div></div>`
