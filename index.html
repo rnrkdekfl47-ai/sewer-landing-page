@@ -18,14 +18,25 @@
       --muted: #475467;
       --soft: #667085;
       --line: #E6EAF0;
-      --bg: #FBFCFD;
+      --bg: #EBF4FA;
+      --acc-cream: #F3E8D2;
+      --acc-orange: #EB7F2C;
+      --acc-navy: #171B26;
+      --acc-teal: #3FA7C4;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
       font-family: "Pretendard Variable", Pretendard, -apple-system, system-ui, sans-serif;
       color: var(--ink);
-      background: var(--bg);
+      background:
+        radial-gradient(1300px 720px at 8% -6%, rgba(26, 95, 214, 0.18), transparent 55%),
+        radial-gradient(1100px 700px at 96% 14%, rgba(63, 167, 196, 0.16), transparent 55%),
+        radial-gradient(1200px 750px at 12% 55%, rgba(63, 167, 196, 0.13), transparent 55%),
+        radial-gradient(1100px 700px at 92% 88%, rgba(26, 95, 214, 0.15), transparent 55%),
+        var(--bg);
+      background-attachment: fixed;
+      animation: bgDrift 22s ease-in-out infinite;
       overflow-x: hidden;
     }
     a { color: var(--blue); text-decoration: none; }
@@ -36,6 +47,10 @@
     @keyframes riseIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes softPulse { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
     @keyframes barUp { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bgDrift {
+      0%, 100% { background-position: 8% -6%, 96% 14%, 12% 55%, 92% 88%, 0 0; }
+      50% { background-position: 16% 3%, 86% 24%, 22% 62%, 82% 94%, 0 0; }
+    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
       [data-reveal] { opacity: 1 !important; }
@@ -59,7 +74,7 @@
 
     header {
       position: sticky; top: 0; z-index: 40;
-      background: rgba(251, 252, 253, 0.86);
+      background: rgba(240, 248, 252, 0.86);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid #E9EDF3;
     }
@@ -95,7 +110,7 @@
     }
     .hero-grid::before {
       content: ""; position: absolute; inset: -8px; z-index: -2;
-      background-image: url("hero-main.png"); background-repeat: no-repeat;
+      background-image: url("images/hero.jpg"); background-repeat: no-repeat;
       background-size: 115% auto; background-position: 0% 12%;
       filter: saturate(1.15) contrast(1.1) brightness(1.12);
     }
@@ -139,7 +154,7 @@
     .btn-ghost:hover { border-color: var(--blue); transform: translateY(-2px); color: var(--ink); }
     .hero-note { margin-top: 20px; font-size: 15px; color: var(--ink); font-weight: 650; }
 
-    .stats { border-top: 1px solid #E9EDF3; border-bottom: 1px solid #E9EDF3; background: #fff; }
+    .stats { border-top: 1px solid #E9EDF3; border-bottom: 1px solid #E9EDF3; background: linear-gradient(180deg, rgba(63, 167, 196, 0.06), #fff 65%); }
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
     .stat { padding: 30px 0; display: grid; gap: 7px; border-left: 1px solid #EDF0F5; }
     .stat:first-child { border-left: none; }
@@ -151,68 +166,97 @@
 
     .cards-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 44px; }
     .card {
-      border: 1px solid var(--line); border-radius: 18px; padding: 28px 26px 26px;
-      background: #fff; display: grid; gap: 12px; align-content: start;
+      position: relative; overflow: hidden;
+      border: 1px solid var(--line); border-radius: 18px; padding: 28px 26px 26px 30px;
+      background: linear-gradient(165deg, #fff 60%, rgba(63, 167, 196, 0.05));
+      display: grid; gap: 12px; align-content: start;
       transition: border-color .3s ease, box-shadow .3s ease, transform .3s cubic-bezier(.22,1,.36,1);
     }
-    .card:hover { border-color: rgba(26, 95, 214, 0.4); box-shadow: 0 16px 36px -22px rgba(26, 95, 214, 0.4); transform: translateY(-3px); }
-    .card .no { font-size: 12px; color: var(--blue); letter-spacing: 0.1em; }
+    .card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+    .card:nth-child(4n+1)::before { background: var(--acc-cream); }
+    .card:nth-child(4n+2)::before { background: var(--acc-orange); }
+    .card:nth-child(4n+3)::before { background: var(--acc-navy); }
+    .card:nth-child(4n+4)::before { background: var(--acc-teal); }
+    .card:nth-child(4n+1) .no { background: rgba(243, 232, 210, 0.7); color: #9A7A2E; }
+    .card:nth-child(4n+2) .no { background: rgba(235, 127, 44, 0.14); color: #C9601A; }
+    .card:nth-child(4n+3) .no { background: rgba(23, 27, 38, 0.08); color: #171B26; }
+    .card:nth-child(4n+4) .no { background: rgba(63, 167, 196, 0.16); color: #1C7891; }
+    .card:hover { border-color: rgba(26, 95, 214, 0.4); box-shadow: 0 18px 40px -22px rgba(16, 24, 40, 0.28); transform: translateY(-5px) scale(1.015); }
+    .card .no { display: inline-flex; font-size: 12px; letter-spacing: 0.1em; padding: 4px 9px; border-radius: 999px; font-weight: 700; width: fit-content; }
     .card strong { font-size: 19px; font-weight: 650; letter-spacing: -0.02em; }
     .card p { font-size: 15.5px; line-height: 1.7; color: #5A6577; }
     .card .action { margin-top: 6px; padding-top: 14px; border-top: 1px solid #EDF0F5; font-size: 14px; color: var(--blue); font-weight: 600; }
 
     .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 44px; border-top: 1px solid var(--line); }
-    .step { padding: 32px 28px 34px; border-right: 1px solid var(--line); display: grid; gap: 12px; background: #fff; }
+    .step {
+      position: relative; padding: 36px 28px 34px; border-right: 1px solid var(--line);
+      display: grid; gap: 12px; background: linear-gradient(165deg, #fff 60%, rgba(63, 167, 196, 0.05));
+      transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease;
+    }
+    .step::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; }
+    .step:nth-child(4n+1)::before { background: var(--acc-cream); }
+    .step:nth-child(4n+2)::before { background: var(--acc-orange); }
+    .step:nth-child(4n+3)::before { background: var(--acc-navy); }
+    .step:nth-child(4n+4)::before { background: var(--acc-teal); }
+    .step:hover { transform: translateY(-4px); box-shadow: 0 16px 34px -24px rgba(16, 24, 40, 0.3); z-index: 1; }
     .step:last-child { border-right: none; }
     .num {
-      width: 28px; height: 28px; border-radius: 9px; background: rgba(26, 95, 214, 0.1); color: var(--blue);
+      width: 28px; height: 28px; border-radius: 9px;
       font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center;
     }
+    .step:nth-child(4n+1) .num { background: rgba(243, 232, 210, 0.7); color: #9A7A2E; }
+    .step:nth-child(4n+2) .num { background: rgba(235, 127, 44, 0.14); color: #C9601A; }
+    .step:nth-child(4n+3) .num { background: rgba(23, 27, 38, 0.08); color: #171B26; }
+    .step:nth-child(4n+4) .num { background: rgba(63, 167, 196, 0.16); color: #1C7891; }
     .step strong { font-size: 19px; font-weight: 650; letter-spacing: -0.02em; }
     .step p { font-size: 15.5px; line-height: 1.7; color: #5A6577; }
 
     .ba { margin-top: 44px; display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
-    .slider {
+    .ba-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .photo-panel {
       position: relative; border: 1px solid #E1E7EF; border-radius: 20px; overflow: hidden;
-      aspect-ratio: 16 / 8.4; cursor: ew-resize; user-select: none; touch-action: none;
+      aspect-ratio: 3 / 4; user-select: none; touch-action: pan-y;
       background: repeating-linear-gradient(135deg, #EDF1F7 0 10px, #E4EAF3 10px 20px);
+      display: flex; align-items: center; justify-content: center; cursor: grab;
     }
-    .slider-after, .slider-before { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-    .slider-before {
-      right: auto; overflow: hidden;
-      background: repeating-linear-gradient(135deg, #D7DEE9 0 10px, #C9D2E0 10px 20px);
+    .photo-panel.is-after { background: repeating-linear-gradient(135deg, #D7DEE9 0 10px, #C9D2E0 10px 20px); }
+    .photo-frame {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background-size: contain; background-repeat: no-repeat; background-position: center;
     }
-    .slider-before .inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .slider-label { font-size: 12.5px; letter-spacing: 0.06em; }
-    .handle {
-      position: absolute; top: 0; bottom: 0; width: 2px; background: #fff;
-      box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.14);
+    .tag { position: absolute; top: 16px; left: 18px; font-size: 11px; letter-spacing: 0.12em; background: rgba(255,255,255,0.82); border-radius: 6px; padding: 5px 9px; z-index: 2; }
+    .tag-b { color: #3F4A5C; }
+    .tag-a { color: var(--blue); }
+    .nav-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.92);
+      box-shadow: 0 6px 18px -6px rgba(16, 24, 40, 0.45); font-size: 20px; color: var(--ink); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: background .2s ease, transform .2s ease;
     }
-    .knob {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 44px; height: 44px; border-radius: 50%; background: #fff;
-      box-shadow: 0 6px 18px -6px rgba(16, 24, 40, 0.5);
-      display: flex; align-items: center; justify-content: center; gap: 4px;
+    .nav-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+    .nav-arrow.prev { left: 14px; }
+    .nav-arrow.next { right: 14px; }
+    .nav-arrow[hidden] { display: none; }
+    .photo-count {
+      position: absolute; bottom: 14px; right: 16px; z-index: 2; font-size: 11.5px; letter-spacing: 0.04em;
+      background: rgba(16,24,40,0.55); color: #fff; border-radius: 999px; padding: 4px 10px;
     }
-    .knob .l, .knob .r { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
-    .knob .l { border-right: 6px solid var(--blue); }
-    .knob .r { border-left: 6px solid var(--blue); }
-    .tag { position: absolute; top: 16px; font-size: 11px; letter-spacing: 0.12em; background: rgba(255,255,255,0.82); border-radius: 6px; padding: 5px 9px; }
-    .tag-b { left: 18px; color: #3F4A5C; }
-    .tag-a { right: 18px; color: var(--blue); }
     .case-list { display: grid; gap: 10px; align-content: start; }
     .case {
       border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px;
-      background: #fff; cursor: pointer; display: grid; gap: 6px;
-      transition: border-color .25s ease, background .25s ease;
+      background: linear-gradient(165deg, #fff 65%, rgba(63, 167, 196, 0.06));
+      cursor: pointer; display: grid; gap: 6px;
+      transition: border-color .25s ease, background .25s ease, transform .25s cubic-bezier(.22,1,.36,1);
     }
+    .case:hover { transform: translateY(-2px); }
     .case.active { border-color: rgba(26, 95, 214, 0.45); background: rgba(26, 95, 214, 0.05); }
     .case strong { font-size: 16px; font-weight: 600; }
     .case span { font-size: 14.5px; line-height: 1.6; color: #5A6577; }
 
-    .estimate { margin-top: 44px; border: 1px solid var(--line); border-radius: 22px; background: #fff; display: grid; grid-template-columns: 1fr 380px; overflow: hidden; box-shadow: 0 20px 50px -36px rgba(16, 24, 40, 0.35); }
+    .estimate { margin-top: 44px; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(155deg, #fff 60%, rgba(26, 95, 214, 0.05)); display: grid; grid-template-columns: 1fr 380px; overflow: hidden; box-shadow: 0 20px 50px -36px rgba(16, 24, 40, 0.35); }
     .est-left { padding: 38px 40px; display: grid; gap: 32px; }
-    .est-right { background: linear-gradient(180deg, rgba(26,95,214,0.06), #F7F9FC); border-left: 1px solid var(--line); padding: 38px 34px; display: grid; gap: 22px; align-content: start; }
+    .est-right { background: linear-gradient(180deg, rgba(26,95,214,0.06), rgba(63,167,196,0.05), #F7F9FC); border-left: 1px solid var(--line); padding: 38px 34px; display: grid; gap: 22px; align-content: start; }
     .field-label { font-size: 14.5px; font-weight: 600; color: #344054; margin-bottom: 14px; }
     .chips { display: flex; flex-wrap: wrap; gap: 9px; }
     .chip {
@@ -237,10 +281,14 @@
     .reviews-track::-webkit-scrollbar { display: none; }
     .review {
       scroll-snap-align: start; flex: 0 0 420px; max-width: 420px;
-      border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px; background: #fff;
-      display: grid; gap: 12px; transition: border-color .3s ease, box-shadow .3s ease;
+      border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px;
+      background: linear-gradient(165deg, #fff 65%, rgba(63, 167, 196, 0.05));
+      display: grid; gap: 12px; transition: border-color .3s ease, box-shadow .3s ease, transform .3s cubic-bezier(.22,1,.36,1);
     }
-    .review:hover { border-color: rgba(26, 95, 214, 0.35); box-shadow: 0 14px 32px -22px rgba(26, 95, 214, 0.4); }
+    .review:nth-child(4n+2) { background: linear-gradient(165deg, #fff 65%, rgba(235, 127, 44, 0.05)); }
+    .review:nth-child(4n+3) { background: linear-gradient(165deg, #fff 65%, rgba(23, 27, 38, 0.04)); }
+    .review:nth-child(4n+4) { background: linear-gradient(165deg, #fff 65%, rgba(243, 232, 210, 0.35)); }
+    .review:hover { border-color: rgba(26, 95, 214, 0.35); box-shadow: 0 14px 32px -22px rgba(26, 95, 214, 0.4); transform: translateY(-3px); }
     .review p { font-size: 16.5px; line-height: 1.75; color: #344054; }
     .review .who { font-size: 14px; color: #98A2B3; }
     .reviews-nav { display: flex; gap: 8px; margin-top: 14px; }
@@ -270,7 +318,10 @@
 
     .contact-card {
       border-radius: 26px; border: 1px solid rgba(26, 95, 214, 0.22);
-      background: radial-gradient(700px 380px at 85% 0%, rgba(26, 95, 214, 0.12), transparent 60%), #fff;
+      background:
+        radial-gradient(700px 380px at 85% 0%, rgba(26, 95, 214, 0.14), transparent 60%),
+        radial-gradient(500px 320px at 5% 100%, rgba(63, 167, 196, 0.10), transparent 60%),
+        #F7FBFD;
       padding: 56px 56px 52px; display: grid; grid-template-columns: 1fr 420px; gap: 56px;
       box-shadow: 0 24px 60px -40px rgba(16, 24, 40, 0.4);
     }
@@ -293,7 +344,7 @@
     .submit-btn:hover { transform: translateY(-2px); }
     .legal { font-size: 13.5px; color: #98A2B3; text-align: center; line-height: 1.6; }
 
-    footer { border-top: 1px solid #E9EDF3; background: #fff; }
+    footer { border-top: 1px solid #E9EDF3; background: linear-gradient(180deg, rgba(26, 95, 214, 0.04), #fff 40%); }
     .foot { padding: 52px 40px 60px; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 40px; }
     .copy { border-top: 1px solid #EDF0F5; }
     .copy .wrap { padding: 20px 40px; font-size: 13.5px; color: #B0B8C5; }
@@ -322,6 +373,25 @@
       .cards-4, .steps, .foot { grid-template-columns: 1fr; }
       .contact-card { padding: 32px 22px; }
       body { padding-bottom: 88px; }
+
+      .hero-grid::before {
+        position: static;
+        inset: auto;
+        display: block;
+        width: calc(100% + 40px);
+        margin: -64px -20px 28px;
+        aspect-ratio: 16 / 10;
+        background-size: cover;
+        background-position: 50% 30%;
+        filter: saturate(1.1) contrast(1.05) brightness(1.05);
+      }
+      .hero-card {
+        max-width: 100%;
+        background: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        padding: 0;
+      }
     }
     @media (max-width: 768px) {
       .mobile-bar { display: flex; }
@@ -387,19 +457,24 @@
     <div data-reveal>
       <div class="eyebrow">Before / After</div>
       <h2>시공 전과 후, 직접 비교해 보세요</h2>
-      <p class="lead">모든 작업은 전후 사진으로 기록해 남기고, 고객님께 그대로 전달드립니다. 손잡이를 좌우로 움직여 보세요.</p>
+      <p class="lead">모든 작업은 전후 사진으로 기록해 남기고, 고객님께 그대로 전달드립니다. 화살표를 눌러 사진을 더 확인해 보세요.</p>
     </div>
     <div class="ba" data-reveal>
-      <div class="slider" id="slider">
-        <div class="slider-after"><span class="slider-label mono" id="afterLabel"></span></div>
-        <div class="slider-before" id="beforePane">
-          <div class="inner" id="beforeInner"><span class="slider-label mono" id="beforeLabel" style="color:#5F6B7C"></span></div>
+      <div class="ba-photos">
+        <div class="photo-panel" id="beforePanel">
+          <div class="tag tag-b mono">BEFORE</div>
+          <div class="photo-frame" id="beforeFrame"><span class="slider-label mono" id="beforeLabel" style="color:#5F6B7C"></span></div>
+          <button type="button" class="nav-arrow prev" id="beforePrev" aria-label="이전 시공 전 사진" hidden>‹</button>
+          <button type="button" class="nav-arrow next" id="beforeNext" aria-label="다음 시공 전 사진" hidden>›</button>
+          <div class="photo-count mono" id="beforeCount" hidden></div>
         </div>
-        <div class="handle" id="handle">
-          <div class="knob"><span class="l"></span><span class="r"></span></div>
+        <div class="photo-panel is-after" id="afterPanel">
+          <div class="tag tag-a mono">AFTER</div>
+          <div class="photo-frame" id="afterFrame"><span class="slider-label mono" id="afterLabel"></span></div>
+          <button type="button" class="nav-arrow prev" id="afterPrev" aria-label="이전 시공 후 사진" hidden>‹</button>
+          <button type="button" class="nav-arrow next" id="afterNext" aria-label="다음 시공 후 사진" hidden>›</button>
+          <div class="photo-count mono" id="afterCount" hidden></div>
         </div>
-        <div class="tag tag-b mono">BEFORE</div>
-        <div class="tag tag-a mono">AFTER</div>
       </div>
       <div class="case-list" id="cases"></div>
     </div>
@@ -527,9 +602,10 @@
       { label: "건물 전체", mul: 1.8 }
     ];
     const caseDefs = [
-      { title: "식당 주방 배수관 고압세척", desc: "기름때로 관 지름이 절반까지 좁아진 현장", before: "시공 전 · 기름때가 굳은 배수관 내부", after: "시공 후 · 관 안쪽까지 세척된 배수관" },
-      { title: "아파트 욕실 역류 해결", desc: "머리카락과 이물질이 뭉쳐 물이 차오르던 상태", before: "시공 전 · 물이 고인 욕실 배수구", after: "시공 후 · 물이 바로 빠지는 배수구" },
-      { title: "다가구 주택 옥외 하수관", desc: "변기 및 오수관 물티슈 및 이물질 막힘 고압세척", before: "시공 전 · 물티슈 및 이물질로 인해 막힌 배관", after: "시공 후 · CCTV로 확인한 배관 내부" }
+      { title: "식당 주방 배수관 고압세척", desc: "기름때로 관 지름이 절반까지 좁아진 현장", before: "시공 전 · 기름때가 굳은 배수관 내부", after: "시공 후 · 관 안쪽까지 세척된 배수관", beforePhotos: ["images/restaurant-before-1.jpg", "images/restaurant-before-2.jpg", "images/restaurant-before-3.jpg", "images/restaurant-before-4.jpg"], afterPhotos: ["images/restaurant-after-1.jpg", "images/restaurant-after-2.jpg", "images/restaurant-after-3.jpg", "images/restaurant-after-4.jpg"] },
+      { title: "세대 주방 하수구 스케일링", desc: "기름 슬러지로 하수관이 막혀 역류한 현장", before: "시공 전 · 기름 슬러지로 역류한 주방 하수구", after: "시공 후 · 슬러지까지 제거된 주방 배수관", beforePhotos: ["images/unit-kitchen-before-1.jpg", "images/unit-kitchen-before-2.jpg", "images/unit-kitchen-before-3.jpg", "images/unit-kitchen-before-4.jpg"], afterPhotos: ["images/unit-kitchen-after-1.jpg", "images/unit-kitchen-after-2.jpg", "images/unit-kitchen-after-3.jpg", "images/unit-kitchen-after-4.jpg"] },
+      { title: "아파트 욕실 역류 해결", desc: "머리카락과 이물질이 뭉쳐 물이 차오르던 상태", before: "시공 전 · 물이 고인 욕실 배수구", after: "시공 후 · 물이 바로 빠지는 배수구", beforePhotos: ["images/apartment-before-1.jpg", "images/apartment-before-2.jpg", "images/apartment-before-3.jpg", "images/apartment-before-4.jpg"], afterPhotos: ["images/apartment-after-1.jpg", "images/apartment-after-2.jpg", "images/apartment-after-3.jpg", "images/apartment-after-4.jpg"] },
+      { title: "다가구 주택 옥외 하수관", desc: "변기 및 오수관 물티슈 및 이물질 막힘 고압세척", before: "시공 전 · 물티슈 및 이물질로 인해 막힌 배관", after: "시공 후 · CCTV로 확인한 배관 내부", beforePhotos: ["images/outdoor-before-1.jpg", "images/outdoor-before-2.jpg", "images/outdoor-before-3.jpg", "images/outdoor-before-4.jpg", "images/outdoor-before-5.jpg"], afterPhotos: ["images/outdoor-after-1.jpg", "images/outdoor-after-2.jpg", "images/outdoor-after-3.jpg", "images/outdoor-after-4.jpg", "images/outdoor-after-5.jpg"] }
     ];
     const faqDefs = [
       { q: "밤이나 주말에도 와 주시나요?", a: "연중무휴 24시간 접수를 받고 어디든 출동합니다." },
@@ -540,7 +616,8 @@
       { q: "정기 관리도 맡길 수 있나요?", a: "식당과 상가, 건물 관리 고객을 대상으로 3개월·6개월 단위 정기 세척 계약을 운영합니다. 정기 고객은 긴급 출동 시 우선 배정됩니다." }
     ];
 
-    let job = 0, place = 0, split = 48, caseIdx = 0, dragging = false;
+    let job = 0, place = 0, caseIdx = 0;
+    let beforePhotoIdx = 0, afterPhotoIdx = 0;
 
     document.getElementById("stats").innerHTML = [
       ["15", "년", "배관 시공 경력"],
@@ -631,40 +708,74 @@
     });
     renderChips();
 
-    function renderCases() {
+    function applyPanePhoto(kind) {
       const c = caseDefs[caseIdx];
-      document.getElementById("beforeLabel").textContent = c.before;
-      document.getElementById("afterLabel").textContent = c.after;
+      const photos = c[kind + "Photos"];
+      const idx = kind === "before" ? beforePhotoIdx : afterPhotoIdx;
+      const frame = document.getElementById(kind + "Frame");
+      const label = document.getElementById(kind + "Label");
+      const prev = document.getElementById(kind + "Prev");
+      const next = document.getElementById(kind + "Next");
+      const count = document.getElementById(kind + "Count");
+      if (photos && photos.length) {
+        frame.style.backgroundImage = `url("${photos[idx]}")`;
+        frame.style.backgroundColor = "#fff";
+        label.style.display = "none";
+        const multi = photos.length > 1;
+        prev.hidden = !multi; next.hidden = !multi; count.hidden = !multi;
+        count.textContent = `${idx + 1} / ${photos.length}`;
+      } else {
+        frame.style.backgroundImage = "none";
+        frame.style.backgroundColor = "transparent";
+        label.textContent = c[kind];
+        label.style.display = "";
+        prev.hidden = true; next.hidden = true; count.hidden = true;
+      }
+    }
+    function renderCases() {
+      beforePhotoIdx = 0; afterPhotoIdx = 0;
+      applyPanePhoto("before");
+      applyPanePhoto("after");
       document.getElementById("cases").innerHTML = caseDefs.map((cc,i) =>
         `<div class="case${i===caseIdx?" active":""}" data-case="${i}"><strong>${cc.title}</strong><span>${cc.desc}</span></div>`
       ).join("");
     }
     document.getElementById("cases").addEventListener("click", (e) => {
       const el = e.target.closest("[data-case]"); if (!el) return;
-      caseIdx = +el.dataset.case; split = 48; renderCases(); setSplit();
+      caseIdx = +el.dataset.case; renderCases();
     });
-    renderCases();
+    function stepPhoto(kind, dir) {
+      const photos = caseDefs[caseIdx][kind + "Photos"];
+      if (!photos || !photos.length) return;
+      const idx = kind === "before" ? beforePhotoIdx : afterPhotoIdx;
+      const next = (idx + dir + photos.length) % photos.length;
+      if (kind === "before") beforePhotoIdx = next; else afterPhotoIdx = next;
+      applyPanePhoto(kind);
+    }
+    document.getElementById("beforePrev").addEventListener("click", () => stepPhoto("before", -1));
+    document.getElementById("beforeNext").addEventListener("click", () => stepPhoto("before", 1));
+    document.getElementById("afterPrev").addEventListener("click", () => stepPhoto("after", -1));
+    document.getElementById("afterNext").addEventListener("click", () => stepPhoto("after", 1));
 
-    const slider = document.getElementById("slider");
-    const beforePane = document.getElementById("beforePane");
-    const beforeInner = document.getElementById("beforeInner");
-    const handle = document.getElementById("handle");
-    function setSplit() {
-      beforePane.style.width = split.toFixed(2) + "%";
-      handle.style.left = split.toFixed(2) + "%";
-      beforeInner.style.width = slider.getBoundingClientRect().width + "px";
+    function enableSwipe(panelId, kind) {
+      const panel = document.getElementById(panelId);
+      let startX = 0, startY = 0, tracking = false;
+      panel.addEventListener("pointerdown", (ev) => {
+        tracking = true; startX = ev.clientX; startY = ev.clientY;
+      });
+      panel.addEventListener("pointerup", (ev) => {
+        if (!tracking) return;
+        tracking = false;
+        const dx = ev.clientX - startX, dy = ev.clientY - startY;
+        if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
+          stepPhoto(kind, dx < 0 ? 1 : -1);
+        }
+      });
+      panel.addEventListener("pointercancel", () => { tracking = false; });
     }
-    function move(ev) {
-      if (!dragging) return;
-      const r = slider.getBoundingClientRect();
-      split = Math.max(2, Math.min(98, ((ev.clientX - r.left) / r.width) * 100));
-      setSplit();
-    }
-    slider.addEventListener("pointerdown", (ev) => { dragging = true; move(ev); });
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", () => { dragging = false; });
-    window.addEventListener("resize", setSplit);
-    setSplit();
+    enableSwipe("beforePanel", "before");
+    enableSwipe("afterPanel", "after");
+    renderCases();
 
     document.getElementById("form").addEventListener("submit", (e) => {
       e.preventDefault();
